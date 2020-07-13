@@ -1,7 +1,7 @@
 <template>
   <el-main>
       <div>
-        <el-row>
+        <el-row class="btns">
           <el-input v-model="input" style="width: 200px;margin-right: 20px" placeholder="请输入关键字" clearable>
           </el-input>
           <el-button type="primary" icon="el-icon-search" @click="search(input)">搜索</el-button>
@@ -21,6 +21,11 @@
         <el-table-column prop="age" label="年龄" width="120" sortable>
         </el-table-column>
         <el-table-column prop="gender" label="性别" width="120">
+        </el-table-column>
+        <el-table-column label="照片" min-width="20%" width="210">
+          <template slot-scope="scope">
+            <img :src="scope.row.imagePath" min-width="200" height="70"/>
+          </template>
         </el-table-column>
         <el-table-column label="操作" fixed="right">
           <template slot-scope="scope">
@@ -53,7 +58,9 @@
 </template>
 
 <style scoped>
-
+.btns{
+  text-align: center;
+}
 </style>
 
 <script>
@@ -115,7 +122,18 @@ export default {
           pageSize: pageSize
         })).then(d => {
         if (d.data.code === 0) {
-          this.userList = d.data.data
+          for (let i = 0; i < d.data.data.length; i++) {
+            console.log(d.data.data[i].imagePath)
+            const pathArr = (d.data.data[i].imagePath || '').split(',') // 无法读取空的属性“split” 所以加上 || ''做判断
+            this.userList.push({
+              id: d.data.data[i].id,
+              name: d.data.data[i].name,
+              age: d.data.data[i].age,
+              gender: d.data.data[i].gender,
+              imagePath: 'http://localhost:8081/upload/' + pathArr[0]
+            })
+          }
+          // this.userList = d.data.data
         } else if (d.body.code === -1) {
           this.userList = []
         }
