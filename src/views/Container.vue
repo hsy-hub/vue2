@@ -7,6 +7,9 @@
       <el-aside width="200px">
         <aside-page></aside-page>
       </el-aside>
+      <!--<el-aside width="200px">-->
+        <!--<user-list></user-list>-->
+      <!--</el-aside>-->
       <el-container>
         <!--<el-main>-->
           <router-view></router-view>

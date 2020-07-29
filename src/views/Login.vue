@@ -1,6 +1,7 @@
 <template>
   <div class="div">
-    <h2>用户登录</h2>
+    <h2>学生管理系统</h2>
+    <h3>用户登录</h3>
     <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
       <el-form-item label="姓名" prop="name">
         <el-input v-model="ruleForm.name"></el-input>
@@ -18,6 +19,8 @@
 
 <script>
 
+import { mapMutations } from 'vuex'
+
 export default {
   data () {
     return {
@@ -33,9 +36,9 @@ export default {
             trigger: 'blur'
           },
           {
-            min: 3,
-            max: 5,
-            message: '长度在 2 到 5 个字符',
+            min: 2,
+            max: 10,
+            message: '长度在 2 到 10 个字符',
             trigger: 'blur'
           }
         ],
@@ -46,20 +49,26 @@ export default {
             trigger: 'blur'
           }
         ]
-      }
+      },
+      token: ''
     }
   },
   methods: {
+    ...mapMutations(['changeLogin']),
     submitForm () {
-      console.log(this.ruleForm.name)
-      console.log(this.ruleForm.password)
+      // console.log(this.ruleForm.name)
+      // console.log(this.ruleForm.password)
       this.$axios.post('http://localhost:8081/login',
         {
           name: this.ruleForm.name,
           password: this.ruleForm.password
         }, { emulateJSON: true }).then(d => {
+        // console.log(d.data)
+        // 将用户token保存到vuex中
+        this.token = 'Bearer ' + d.data.token
+        this.changeLogin({ Authorization: this.token })
         if (d.data.code === 1) {
-          localStorage.setItem('token', JSON.stringify(d.data.token))
+          // localStorage.setItem('token', JSON.stringify(d.data.token))
           // 路由的跳转this.$router.push("新路由的地址")
           localStorage.setItem('user', JSON.stringify(d.data.data))
           this.$router.push('/container')

@@ -1,68 +1,63 @@
 <template>
   <el-main>
-      <div>
-        <el-row class="btns">
-          <el-input v-model="input" style="width: 200px;margin-right: 20px" placeholder="请输入姓名关键字" clearable>
-          </el-input>
-          <el-button type="primary" icon="el-icon-search" @click="search(input)">搜索</el-button>
-          <el-button type="primary" icon="el-icon-plus" @click="addDialogVisible = true" round>添加用户</el-button>
-          <el-button type="danger" icon="el-icon-minus" round @click="dels()">批量删除</el-button>
-        </el-row>
-      </div>
-      <el-table :data="userList" border style="width: 100%"  max-height="400"
-                :summary-method="getSummaries"
-                show-summary
-                @selection-change="selsChange">
-        <el-table-column type="selection" width="55"></el-table-column><!--复选框-->
-        <el-table-column prop="id" label="ID" width="140">
-        </el-table-column>
-        <el-table-column
-          label="姓名"
-          width="180">
-          <template slot-scope="scope">
-            <el-popover trigger="hover" placement="top">
-              <p>姓名: {{ scope.row.name }}</p>
-              <p>年龄: {{ scope.row.age }}</p>
-              <p>性别: {{ scope.row.gender }}</p>
-              <p>专业: {{ scope.row.majorName }}</p>
-              <p>班级: {{ scope.row .className}}</p>
-              <p>级别: {{ scope.row.level}}</p>
-              <div slot="reference" class="name-wrapper">
-                <el-tag size="medium">{{ scope.row.name }}</el-tag>
-              </div>
-            </el-popover>
-          </template>
-        </el-table-column>
-        <el-table-column prop="age" label="年龄" width="120" sortable>
-        </el-table-column>
-        <el-table-column prop="gender" label="性别" width="120">
-        </el-table-column>
-        <el-table-column label="头像" min-width="20%" width="210">
-          <template slot-scope="scope">
-            <img :src="scope.row.imagePath" min-width="200" height="70"/>
-          </template>
-        </el-table-column>
-        <!--<el-table-column prop="majorName" label="专业" width="120">-->
-        <!--</el-table-column>-->
-        <el-table-column label="操作" fixed="right">
-          <template slot-scope="scope">
-            <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-            <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
+    <div>
+      <el-row class="btns">
+        <el-input v-model="input" style="width: 200px;margin-right: 20px" placeholder="请输入关键字" clearable>
+        </el-input>
+        <el-button type="primary" icon="el-icon-search" @click="search(input)">搜索</el-button>
+        <el-button type="primary" icon="el-icon-plus" @click="addDialogVisible = true" round>添加用户</el-button>
+        <el-button type="danger" icon="el-icon-minus" round @click="dels()">批量删除</el-button>
+      </el-row>
+    </div>
+    <el-table :data="userList1" border style="width: 100%"  max-height="400"
+              :summary-method="getSummaries"
+              show-summary
+              @selection-change="selsChange">
+      <el-table-column type="selection" width="55"></el-table-column><!--复选框-->
+      <el-table-column prop="id" label="ID" width="140">
+      </el-table-column>
+      <el-table-column
+        label="姓名"
+        width="180">
+        <template slot-scope="scope">
+          <el-popover trigger="hover" placement="top">
+            <p>姓名: {{ scope.row.name }}</p>
+            <p>年龄: {{ scope.row.age }}</p>
+            <p>性别: {{ scope.row.gender }}</p>
+            <p>级别: {{ scope.row.level}}</p>
+            <div slot="reference" class="name-wrapper">
+              <el-tag size="medium">{{ scope.row.name }}</el-tag>
+            </div>
+          </el-popover>
+        </template>
+      </el-table-column>
+      <el-table-column prop="age" label="年龄" width="120" sortable>
+      </el-table-column>
+      <el-table-column prop="gender" label="性别" width="120">
+      </el-table-column>
+      <!--<el-table-column prop="level" label="级别" width="120">-->
+      <!--</el-table-column>-->
+      <!--<el-table-column prop="classnum" label="教室" width="120">-->
+    <!--</el-table-column>-->
+      <el-table-column label="操作" fixed="right">
+        <template slot-scope="scope">
+          <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+          <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
     <div class="block">
       <!--<page></page>-->
       <div class="block">
-      <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="currentPage"
-        :page-sizes="[3, 5, 7, 10]"
-        :page-size="pageSize"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total=totalCount>
-      </el-pagination>
+        <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="currentPage"
+          :page-sizes="[3, 5, 7, 10]"
+          :page-size="pageSize"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total=totalCount>
+        </el-pagination>
       </div>
       <el-dialog title="添加用户" :visible.sync="addDialogVisible" width="50%">
         <add-user></add-user>
@@ -71,28 +66,19 @@
         <edit-user ref="edit"></edit-user>
       </el-dialog>
     </div>
-    </el-main>
+  </el-main>
 </template>
 
-<style scoped>
-.btns{
-  text-align: center;
-}
-</style>
-
 <script>
-import AddUser from './AddUser'
-import EditUser from './EditUser'
-
 export default {
-  name: 'userList',
+  name: 'UserList1',
   components: {
-    AddUser,
-    EditUser
+    // AddUser,
+    // EditUser
   },
   data () {
     return {
-      userList: [],
+      userList1: [],
       input: '',
       checked: true,
       addDialogVisible: false,
@@ -124,35 +110,32 @@ export default {
       this.getList(this.input, this.currentPage, this.pageSize)
     },
     getList (name, currentPage, pageSize) {
-      this.$axios.post('http://localhost:8081/getUserPageSearch',
+      this.$axios.post('http://localhost:8081/getUserListSearch',
         this.$qs.stringify({
           name: name,
           currentPage: currentPage,
           pageSize: pageSize
         })).then(d => {
         if (d.data.code === 0) {
+          console.log(d)
           for (let i = 0; i < d.data.data.length; i++) {
-            console.log(d.data.data[i].imagePath)
-            const pathArr = (d.data.data[i].imagePath || '').split(',') // 无法读取空的属性“split” 所以加上 || ''做判断
-            this.userList.push({
+            this.userList1.push({
               id: d.data.data[i].id,
               name: d.data.data[i].name,
               age: d.data.data[i].age,
               gender: d.data.data[i].gender,
-              majorName: d.data.data[i].major.majorName,
-              className: d.data.data[i].class_.className,
-              level: d.data.data[i].rank.level,
-              imagePath: 'http://localhost:8081/upload/' + pathArr[0]
+              level: d.data.data[i].rank.level
+              // classnum: d.data.data[i].classRoom.classnum
             })
           }
           // this.userList = d.data.data
         } else if (d.body.code === -1) {
-          this.userList = []
+          this.userList1 = []
         }
       })
     },
     getUserListCount () {
-      this.$axios.get('http://localhost:8081/getUserCount',
+      this.$axios.get('http://localhost:8081/getUser1Count',
         this.$qs.stringify({
           name: this.input
         })).then(d => {
@@ -162,7 +145,7 @@ export default {
       })
     },
     search () {
-      this.$axios.post('http://localhost:8081/getUserByName',
+      this.$axios.post('http://localhost:8081/getUser1ByName',
         this.$qs.stringify({
           name: this.input
         })).then(d => {
@@ -190,7 +173,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$axios.post('http://localhost:8081/deleteUser',
+        this.$axios.post('http://localhost:8081/deleteUser1',
           this.$qs.stringify({
             ids: this.ids
           })).then(d => {
@@ -233,13 +216,12 @@ export default {
         type: 'warning',
         center: true
       }).then(() => {
-        this.$axios.get('http://localhost:8081/delUserById/' + row.id).then(d => {
+        this.$axios.get('http://localhost:8081/delUserById1/' + row.id).then(d => {
           if (d.data === 1) {
             this.$message({
               message: '删除成功',
               type: 'success'
             })
-            parent.location.reload()
             this.getList(this.input, this.currentPage, this.pageSize)
             this.getUserListCount()
           } else {
@@ -285,3 +267,7 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+
+</style>

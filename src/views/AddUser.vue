@@ -9,9 +9,15 @@
       <el-form-item label="年龄" prop="age">
         <el-input type="number" v-model="ruleForm.age"></el-input>
       </el-form-item>
-      <el-form-item label="性别" prop="gender">
-        <el-input v-model="ruleForm.gender"></el-input>
+      <el-form-item label="性别">
+        <el-radio-group v-model="ruleForm.gender" size="medium" prop="gender">
+          <el-radio border label="男"></el-radio>
+          <el-radio border label="女"></el-radio>
+        </el-radio-group>
       </el-form-item>
+      <!--<el-form-item label="性别" prop="gender">-->
+        <!--<el-input v-model="ruleForm.gender"></el-input>-->
+      <!--</el-form-item>-->
       <el-form-item label="上传图片">
         <el-upload action="http://localhost:8081/imagesUpload"
                    list-type="picture-card"
@@ -57,9 +63,9 @@ export default {
             trigger: 'blur'
           },
           {
-            min: 3,
+            min: 2,
             max: 5,
-            message: '长度在 3 到 5 个字符',
+            message: '长度在 2 到 5 个字符',
             trigger: 'blur'
           }
         ],
@@ -96,8 +102,20 @@ export default {
       this.$refs[formName].resetFields()
     },
     addUser (formName) {
+      // var params = this.ruleForm
+      // console.log('params' + params)
       this.$refs[formName].validate((valid) => {
         if (valid) {
+          // this.$axios({
+          //   url: 'http://localhost:8081/addUser',
+          //   method: 'post',
+          //   // datatype: 'json',
+          //   // contentType: 'application/json',
+          //   data: params,
+          //   transformRequest: [function (data) {
+          //     return qs.stringify(data)
+          //   }]
+          // }
           this.$refs.upload.submit()
           // alert('submit')
           // this.$axios.post('http://localhost:8081/addUser',
@@ -106,7 +124,8 @@ export default {
           //     password: this.ruleForm.password,
           //     age: this.ruleForm.age,
           //     gender: this.ruleForm.gender
-          //   })).then(d => {
+          //   })
+          // ).then(d => {
           //   if (d.data === 1) {
           //     // 关闭dialog 刷新父页面 element dialog 是自动关闭的 是因为父页面的 addDialogVisible 重置为false
           //     parent.location.reload()
@@ -122,11 +141,11 @@ export default {
       })
     },
     handlerRemove (file, fileList) {
-      console.log(file, fileList)
+      // console.log(file, fileList)
     },
     handlerPictureCardPreview (file) {
       this.dialogImageUrl = file.url
-      console.log(this.dialogImageUrl)
+      // console.log(this.dialogImageUrl)
       this.dialogVisible = true
     },
     handlerUploadSuccess (reponse, file, fileList) {
@@ -139,10 +158,20 @@ export default {
         this.ruleForm.imagePath = this.ruleForm.imagePath + ',' + reponse
       }
       if (filecount === this.uploadSuccessFileCount) {
+        // this.$axios.post('http://localhost:8081/addUser',
+        //   this.$qs.stringify({
+        //     name: this.ruleForm.name,
+        //     password: this.ruleForm.password,
+        //     age: this.ruleForm.age,
+        //     gender: this.ruleForm.gender,
+        //     imagePath: this.ruleForm.imagePath
+        //   })
         this.$axios({
           method: 'post',
+          dataType: 'json',
           url: 'http://localhost:8081/addUser',
           data: params,
+          traditional: true, // 数组
           transformRequest: [function (data) {
             return qs.stringify(data)
           }]
